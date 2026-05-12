@@ -7,15 +7,9 @@ import Image from 'next/image';
 export default function AboutPage() {
   return (
     <div className="min-h-screen bg-cream text-black font-sans">
-      {/* Mini Nav */}
-      <nav className="p-4 md:p-6 flex justify-between items-center border-b-2 border-black sticky top-0 bg-cream/90 backdrop-blur-sm z-50">
-        <Link href="/" className="font-display text-4xl border-4 border-black px-2 leading-none uppercase">S/C</Link>
-        <Link href="/" className="font-bold text-sm uppercase tracking-widest hover:text-sc_red transition-colors">Back to Home</Link>
-      </nav>
-
       <main>
         {/* Hero Section - Optimized for Single Viewport */}
-        <section className="h-[calc(100vh-80px)] min-h-[600px] flex flex-col justify-center py-8 px-4 md:px-8 max-w-[1400px] mx-auto border-b-2 border-black text-center md:text-left">
+        <section className="min-h-[80vh] flex flex-col justify-center py-16 px-4 md:px-8 max-w-[1400px] mx-auto border-b-2 border-black text-center md:text-left">
           <div className="w-fit mx-auto md:mx-0 border-2 border-black rounded-full px-4 py-1.5 font-bold text-[10px] tracking-widest uppercase mb-4 md:mb-6">
             The S/C Manifesto
           </div>
@@ -110,10 +104,6 @@ export default function AboutPage() {
           </Link>
         </section>
       </main>
-
-      <footer className="py-12 border-t-2 border-black text-center font-bold uppercase tracking-widest text-[10px] text-black/40">
-        &copy; 2026 SCRUBS/CLINICAL &mdash; ALL RIGHTS RESERVED &mdash; BUILT FOR THE VANGUARD
-      </footer>
     </div>
   );
 }

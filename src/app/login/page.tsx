@@ -1,159 +1,152 @@
 "use client";
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
+import { ChevronLeft, Mail, Lock, ArrowRight } from 'lucide-react';
 
 export default function AuthPage() {
+  const [activeTab, setActiveTab] = useState('login');
+
   return (
-    <div className="fixed inset-0 overflow-hidden bg-cream flex flex-col lg:flex-row">
-      {/* LEFT SIDE - FORM */}
-      <div className="w-full lg:w-[55%] flex flex-col border-r-0 lg:border-r-2 border-black h-full overflow-y-auto lg:overflow-hidden bg-cream">
-        <header className="p-4 md:p-6 flex justify-between items-center border-b-2 border-black lg:border-none shrink-0">
-          <Link href="/" className="font-display text-3xl tracking-tighter bg-black text-cream px-2 pb-0.5 leading-none inline-block hover:bg-sc_red transition-colors">
-            S/C
-          </Link>
-          <div className="font-bold tracking-widest text-[10px] uppercase">
-            Secure Portal
-          </div>
-        </header>
+    <div className="flex-1 flex items-center justify-center py-20 px-4 bg-cream">
+      <div className="w-full max-w-[440px] bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-8 md:p-10">
 
-        <main className="flex-1 flex items-start justify-center p-4 md:p-8 lg:p-12 pt-8 md:pt-12 lg:pt-16">
-          <div className="w-full max-w-sm animate-in fade-in slide-in-from-bottom-4 duration-700">
-            <div className="inline-block border-2 border-black rounded-full px-3 py-1 font-bold text-[10px] tracking-widest uppercase mb-4">
-              Authentication
+        <Link href="/" className="flex items-center gap-2 text-black/40 hover:text-black transition-colors font-bold uppercase tracking-widest text-[10px] mb-8 w-fit group">
+          <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+          Back to store
+        </Link>
+
+        <div className="mb-8 text-center">
+          <h1 className="display-text text-4xl mb-2">
+            {activeTab === 'login' ? 'WELCOME BACK' : 'CREATE ACCOUNT'}
+          </h1>
+          <p className="text-black/50 font-medium text-xs">
+            {activeTab === 'login'
+              ? 'Enter your credentials to access your portal.'
+              : 'Join the community of healthcare professionals.'}
+          </p>
+        </div>
+
+        <Tabs defaultValue="login" className="w-full" onValueChange={setActiveTab}>
+          <div className="flex justify-center mb-8">
+            <TabsList className="grid w-full max-w-[280px] grid-cols-2 bg-sc_gray/10 rounded-none p-1 h-10 border-2 border-black">
+              <TabsTrigger
+                value="login"
+                className="rounded-none font-bold tracking-widest uppercase text-[10px] data-[state=active]:bg-black data-[state=active]:text-cream h-full transition-all"
+              >
+                Login
+              </TabsTrigger>
+              <TabsTrigger
+                value="signup"
+                className="rounded-none font-bold tracking-widest uppercase text-[10px] data-[state=active]:bg-black data-[state=active]:text-cream h-full transition-all"
+              >
+                Sign Up
+              </TabsTrigger>
+            </TabsList>
+          </div>
+
+          <TabsContent value="login" className="mt-0 focus-visible:outline-none animate-in fade-in duration-500">
+            <div className="space-y-8">
+              <div className="flex justify-center">
+                <Button className="w-full max-w-[280px] rounded-none bg-black text-cream hover:bg-sc_red h-14 font-bold tracking-widest uppercase text-sm border-2 border-black transition-all group shadow-[4px_4px_0px_0px_rgba(214,60,42,1)] hover:shadow-none hover:translate-x-1 hover:translate-y-1">
+                  Login <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </Button>
+              </div>
+
+              <div className="space-y-4">
+                <div className="space-y-1.5">
+                  <Label htmlFor="email" className="font-bold uppercase tracking-wider text-[10px] flex items-center gap-2 opacity-60">
+                    <Mail className="w-3 h-3" /> Email Address
+                  </Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="dr.smith@hospital.com"
+                    className="rounded-none border-2 border-black bg-transparent h-12 text-sm focus-visible:ring-0 focus-visible:border-sc_red transition-colors placeholder:text-black/20"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <div className="flex justify-between items-center">
+                    <Label htmlFor="password" className="font-bold uppercase tracking-wider text-[10px] flex items-center gap-2 opacity-60">
+                      <Lock className="w-3 h-3" /> Password
+                    </Label>
+                    <a href="#" className="text-sc_red hover:underline font-bold text-[10px] uppercase tracking-wider">Forgot?</a>
+                  </div>
+                  <Input
+                    id="password"
+                    type="password"
+                    placeholder="••••••••"
+                    className="rounded-none border-2 border-black bg-transparent h-12 text-sm focus-visible:ring-0 focus-visible:border-sc_red transition-colors placeholder:text-black/20"
+                  />
+                </div>
+              </div>
             </div>
-            <h1 className="display-text text-5xl md:text-6xl mb-6">ACCESS S/C</h1>
+          </TabsContent>
 
-            <Tabs defaultValue="login" className="w-full flex flex-col">
-              <TabsList className="grid w-full grid-cols-2 bg-transparent border-2 border-black rounded-none p-0 h-12 mb-6 shrink-0">
-                <TabsTrigger
-                  value="login"
-                  className="rounded-none font-bold tracking-widest uppercase text-xs data-[state=active]:bg-black data-[state=active]:text-cream h-full transition-colors"
-                >
-                  Login
-                </TabsTrigger>
-                <TabsTrigger
-                  value="signup"
-                  className="rounded-none font-bold tracking-widest uppercase text-xs data-[state=active]:bg-black data-[state=active]:text-cream h-full transition-colors"
-                >
-                  Sign Up
-                </TabsTrigger>
-              </TabsList>
+          <TabsContent value="signup" className="mt-0 focus-visible:outline-none animate-in fade-in duration-500">
+            <div className="space-y-8">
+              <div className="flex justify-center">
+                <Button className="w-full max-w-[280px] rounded-none bg-black text-cream hover:bg-sc_red h-14 font-bold tracking-widest uppercase text-sm border-2 border-black transition-all group shadow-[4px_4px_0px_0px_rgba(214,60,42,1)] hover:shadow-none hover:translate-x-1 hover:translate-y-1">
+                  Create Account <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </Button>
+              </div>
 
-              <TabsContent value="login" className="mt-0 outline-none">
-                <Card className="rounded-none border-2 border-black bg-cream shadow-[6px_6px_0px_0px_rgba(13,13,13,1)] hover:shadow-[10px_10px_0px_0px_rgba(214,60,42,1)] transition-all duration-300">
-                  <CardHeader className="pb-3 border-b-2 border-black mb-4 py-3">
-                    <CardTitle className="font-display text-2xl uppercase tracking-wider">Welcome Back</CardTitle>
-                    <CardDescription className="text-black/70 font-medium text-xs">
-                      Enter your credentials to access your account.
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4 py-2">
-                    <div className="space-y-1.5">
-                      <Label htmlFor="email" className="font-bold uppercase tracking-wider text-[10px]">Email</Label>
-                      <Input
-                        id="email"
-                        type="email"
-                        placeholder="doctor@hospital.com"
-                        className="rounded-none border-2 border-black bg-transparent h-10 text-sm focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-sc_red transition-colors"
-                      />
-                    </div>
-                    <div className="space-y-1.5">
-                      <Label htmlFor="password" className="font-bold uppercase tracking-wider text-[10px] flex justify-between">
-                        <span>Password</span>
-                        <a href="#" className="text-sc_red hover:underline normal-case tracking-normal font-medium">Forgot?</a>
-                      </Label>
-                      <Input
-                        id="password"
-                        type="password"
-                        className="rounded-none border-2 border-black bg-transparent h-10 text-sm focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-sc_red transition-colors"
-                      />
-                    </div>
-                  </CardContent>
-                  <CardFooter className="pt-2 pb-6">
-                    <Button className="w-full rounded-none bg-black text-cream hover:bg-sc_red hover:text-cream h-12 font-bold tracking-widest uppercase text-base border-2 border-black transition-colors">
-                      Login
-                    </Button>
-                  </CardFooter>
-                </Card>
-              </TabsContent>
+              <div className="space-y-4">
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-1.5">
+                    <Label htmlFor="firstName" className="font-bold uppercase tracking-wider text-[10px] opacity-60">First Name</Label>
+                    <Input
+                      id="firstName"
+                      placeholder="Jane"
+                      className="rounded-none border-2 border-black bg-transparent h-12 text-sm focus-visible:ring-0 focus-visible:border-sc_red transition-colors placeholder:text-black/20"
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label htmlFor="lastName" className="font-bold uppercase tracking-wider text-[10px] opacity-60">Last Name</Label>
+                    <Input
+                      id="lastName"
+                      placeholder="Doe"
+                      className="rounded-none border-2 border-black bg-transparent h-12 text-sm focus-visible:ring-0 focus-visible:border-sc_red transition-colors placeholder:text-black/20"
+                    />
+                  </div>
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="signupEmail" className="font-bold uppercase tracking-wider text-[10px] opacity-60">Email Address</Label>
+                  <Input
+                    id="signupEmail"
+                    type="email"
+                    placeholder="dr.doe@hospital.com"
+                    className="rounded-none border-2 border-black bg-transparent h-12 text-sm focus-visible:ring-0 focus-visible:border-sc_red transition-colors placeholder:text-black/20"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="signupPassword" className="font-bold uppercase tracking-wider text-[10px] opacity-60">Create Password</Label>
+                  <Input
+                    id="signupPassword"
+                    type="password"
+                    placeholder="Min. 8 characters"
+                    className="rounded-none border-2 border-black bg-transparent h-12 text-sm focus-visible:ring-0 focus-visible:border-sc_red transition-colors placeholder:text-black/20"
+                  />
+                </div>
+              </div>
+            </div>
+          </TabsContent>
+        </Tabs>
 
-              <TabsContent value="signup" className="mt-0 outline-none">
-                <Card className="rounded-none border-2 border-black bg-cream shadow-[6px_6px_0px_0px_rgba(13,13,13,1)] hover:shadow-[10px_10px_0px_0px_rgba(214,60,42,1)] transition-all duration-300">
-                  <CardHeader className="pb-3 border-b-2 border-black mb-4 py-3">
-                    <CardTitle className="font-display text-2xl uppercase tracking-wider">Join S/C</CardTitle>
-                    <CardDescription className="text-black/70 font-medium text-xs">
-                      Create an account to track orders and save your fit.
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4 py-2">
-                    <div className="grid grid-cols-2 gap-3">
-                      <div className="space-y-1.5">
-                        <Label htmlFor="firstName" className="font-bold uppercase tracking-wider text-[10px]">First Name</Label>
-                        <Input
-                          id="firstName"
-                          placeholder="Priya"
-                          className="rounded-none border-2 border-black bg-transparent h-10 text-sm focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-sc_red transition-colors"
-                        />
-                      </div>
-                      <div className="space-y-1.5">
-                        <Label htmlFor="lastName" className="font-bold uppercase tracking-wider text-[10px]">Last Name</Label>
-                        <Input
-                          id="lastName"
-                          placeholder="Sharma"
-                          className="rounded-none border-2 border-black bg-transparent h-10 text-sm focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-sc_red transition-colors"
-                        />
-                      </div>
-                    </div>
-                    <div className="space-y-1.5">
-                      <Label htmlFor="signupEmail" className="font-bold uppercase tracking-wider text-[10px]">Email</Label>
-                      <Input
-                        id="signupEmail"
-                        type="email"
-                        placeholder="doctor@hospital.com"
-                        className="rounded-none border-2 border-black bg-transparent h-10 text-sm focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-sc_red transition-colors"
-                      />
-                    </div>
-                    <div className="space-y-1.5">
-                      <Label htmlFor="signupPassword" className="font-bold uppercase tracking-wider text-[10px]">Password</Label>
-                      <Input
-                        id="signupPassword"
-                        type="password"
-                        className="rounded-none border-2 border-black bg-transparent h-10 text-sm focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-sc_red transition-colors"
-                      />
-                    </div>
-                  </CardContent>
-                  <CardFooter className="pt-2 pb-6">
-                    <Button className="w-full rounded-none bg-black text-cream hover:bg-sc_red hover:text-cream h-12 font-bold tracking-widest uppercase text-base border-2 border-black transition-colors">
-                      Create Account
-                    </Button>
-                  </CardFooter>
-                </Card>
-              </TabsContent>
-            </Tabs>
+        <div className="mt-10 pt-8 border-t-2 border-black/10 flex flex-col gap-4">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-black/40 text-center italic">Secure authentication</p>
+          <div className="grid grid-cols-2 gap-4">
+            <button className="flex items-center justify-center gap-2 border-2 border-black py-3 font-bold uppercase tracking-widest text-[10px] hover:bg-black hover:text-cream transition-colors">
+              Google
+            </button>
+            <button className="flex items-center justify-center gap-2 border-2 border-black py-3 font-bold uppercase tracking-widest text-[10px] hover:bg-black hover:text-cream transition-colors">
+              Apple
+            </button>
           </div>
-        </main>
-      </div>
-
-      {/* RIGHT SIDE - IMAGE */}
-      <div className="hidden lg:block lg:w-[45%] relative bg-sc_gray h-full">
-        <div className="absolute inset-0 bg-black/20 z-10"></div>
-        <Image
-          src="/scrubs_olive.png"
-          alt="Medical Professional"
-          fill
-          className="object-cover object-top"
-          priority
-        />
-        <div className="absolute bottom-10 left-10 z-20 text-cream max-w-sm">
-          <h2 className="display-text text-6xl mb-3 leading-[0.85]">CLINICAL<br />PRECISION.</h2>
-          <p className="font-bold text-base tracking-wide">Gear up with the best in medical apparel.</p>
         </div>
       </div>
     </div>

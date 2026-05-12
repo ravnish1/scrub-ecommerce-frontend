@@ -3,15 +3,31 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useCart } from "@/lib/cart-context";
 
 // -- COMPONENTS --
 
 const ProductModal = ({ product, onClose }: { product: any; onClose: () => void }) => {
+  const { addToCart } = useCart();
+  const [selectedSize, setSelectedSize] = useState<string>("M");
+
   if (!product) return null;
+
+  const handleAddToCart = () => {
+    addToCart({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.image,
+      quantity: 1,
+      size: selectedSize
+    });
+    onClose();
+  };
 
   return (
     <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-      <div className="bg-cream w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 overflow-hidden shadow-2xl relative animate-in fade-in zoom-in duration-300">
+      <div className="bg-cream w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 overflow-hidden shadow-2xl relative animate-in fade-in zoom-in duration-300 border-2 border-black">
         <button
           onClick={onClose}
           className="absolute top-4 right-4 z-10 w-10 h-10 bg-black text-cream rounded-full flex items-center justify-center hover:bg-sc_red transition-colors"
@@ -24,23 +40,33 @@ const ProductModal = ({ product, onClose }: { product: any; onClose: () => void 
         </div>
 
         <div className="p-8 md:p-12 flex flex-col justify-center">
+          <div className="inline-block border-2 border-black rounded-full px-3 py-1 font-bold text-[10px] tracking-widest uppercase mb-4 w-fit">
+            Limited Release
+          </div>
           <h2 className="display-text text-4xl md:text-5xl mb-2">{product.name}</h2>
           <p className="text-xl font-bold text-sc_red mb-6">{product.price}</p>
-          <p className="text-black/70 mb-8">{product.desc}</p>
+          <p className="text-black/70 mb-8 font-medium leading-relaxed">{product.desc}</p>
 
           <div className="mb-8">
             <h4 className="font-bold uppercase tracking-wider text-sm mb-3">Select Size</h4>
             <div className="flex gap-3 flex-wrap">
               {['XS', 'S', 'M', 'L', 'XL', 'XXL'].map((size) => (
-                <button key={size} className="w-12 h-12 border-2 border-black hover:bg-black hover:text-cream transition-colors font-bold uppercase">
+                <button 
+                  key={size} 
+                  onClick={() => setSelectedSize(size)}
+                  className={`w-12 h-12 border-2 border-black transition-all font-bold uppercase ${selectedSize === size ? 'bg-black text-cream scale-110' : 'hover:bg-black/5'}`}
+                >
                   {size}
                 </button>
               ))}
             </div>
           </div>
 
-          <button className="w-full bg-black text-cream py-4 font-bold uppercase tracking-widest border-2 border-black hover:bg-transparent hover:text-black transition-colors">
-            Add to Cart — {product.price}
+          <button 
+            onClick={handleAddToCart}
+            className="w-full bg-black text-cream py-4 font-bold uppercase tracking-widest border-2 border-black hover:bg-sc_red hover:border-sc_red transition-colors shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] active:translate-x-1 active:translate-y-1 active:shadow-none"
+          >
+            Add to Bag — {product.price}
           </button>
         </div>
       </div>
@@ -51,8 +77,8 @@ const ProductModal = ({ product, onClose }: { product: any; onClose: () => void 
 // -- MAIN PAGE --
 
 export default function Home() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<any | null>(null);
+  const { addToCart } = useCart();
 
   const products = [
     { id: 1, name: "The Essential Top", price: "₹2,499", image: "/scrubs_navy.png", desc: "4-way stretch, ultra-soft, tailored fit. The top that started it all." },
@@ -65,75 +91,6 @@ export default function Home() {
 
   return (
     <main className="relative min-h-screen">
-      {/* 1. ANNOUNCEMENT BAR */}
-      <div className="bg-sc_red text-cream py-2 overflow-hidden flex whitespace-nowrap font-bold text-sm tracking-[0.1em] uppercase">
-        <div className="animate-marquee flex">
-          {[...Array(4)].map((_, i) => (
-            <div key={i} className="flex">
-              <span className="px-8">$99 FREE SHIPPING</span><span>•</span>
-              <span className="px-8">30-DAY RETURNS</span><span>•</span>
-              <span className="px-8">TRUSTED BY 10K+ PROS</span><span>•</span>
-              <span className="px-8">MADE FOR THOSE WHO SHOW UP</span><span>•</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* 2. NAVBAR */}
-      <nav className="sticky top-0 z-50 px-4 md:px-8 py-4 flex justify-between items-center bg-cream/80 backdrop-blur-md transition-all shadow-sm">
-        <a href="#" className="font-display text-3xl border-4 border-black px-3 py-1 leading-none">S/C</a>
-
-        <div className="hidden md:flex items-center gap-6 lg:gap-8">
-          <Link href="#collection" className="font-bold text-xs lg:text-sm uppercase tracking-widest hover:text-sc_red transition-colors relative group">
-            Collection
-            <span className="absolute -bottom-1 left-0 w-full h-[2px] bg-sc_red scale-x-0 origin-right group-hover:scale-x-100 group-hover:origin-left transition-transform duration-300"></span>
-          </Link>
-          <Link href="/about" className="font-bold text-xs lg:text-sm uppercase tracking-widest hover:text-sc_red transition-colors relative group">
-            About Us
-            <span className="absolute -bottom-1 left-0 w-full h-[2px] bg-sc_red scale-x-0 origin-right group-hover:scale-x-100 group-hover:origin-left transition-transform duration-300"></span>
-          </Link>
-          <Link href="#fit" className="font-bold text-xs lg:text-sm uppercase tracking-widest hover:text-sc_red transition-colors relative group">
-            Find Your Fit
-            <span className="absolute -bottom-1 left-0 w-full h-[2px] bg-sc_red scale-x-0 origin-right group-hover:scale-x-100 group-hover:origin-left transition-transform duration-300"></span>
-          </Link>
-          <Link href="/login" className="font-bold text-xs lg:text-sm uppercase tracking-widest bg-black text-cream px-4 py-2 hover:bg-sc_red transition-colors">
-            Login/Signup
-          </Link>
-          <button className="font-bold text-xs lg:text-sm uppercase tracking-widest border-2 border-black px-4 py-1.5 hover:bg-sc_red hover:text-cream hover:border-sc_red transition-colors">
-            Cart [0]
-          </button>
-        </div>
-
-        <button
-          className="md:hidden w-8 h-6 relative z-[101] flex flex-col justify-between"
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-        >
-          <span className={`w-full h-[2px] bg-black transition-all duration-300 ${isMenuOpen ? 'rotate-45 translate-y-[11px]' : ''}`}></span>
-          <span className={`w-full h-[2px] bg-black transition-all duration-300 ${isMenuOpen ? 'opacity-0' : ''}`}></span>
-          <span className={`w-full h-[2px] bg-black transition-all duration-300 ${isMenuOpen ? '-rotate-45 -translate-y-[11px]' : ''}`}></span>
-        </button>
-      </nav>
-
-      {/* Mobile Nav */}
-      <div className={`fixed inset-0 bg-cream z-[90] flex flex-col items-center justify-center gap-8 transition-transform duration-500 ease-[cubic-bezier(0.77,0,0.175,1)] ${isMenuOpen ? 'translate-y-0' : '-translate-y-full'}`}>
-        {[
-          { label: "Collection", href: "#collection" },
-          { label: "About Us", href: "/about" },
-          { label: "Find Your Fit", href: "#fit" },
-          { label: "Login/Signup", href: "/login" },
-          { label: "Cart [0]", href: "#cart" }
-        ].map((item, i) => (
-          <a
-            key={item.label}
-            href={item.href}
-            onClick={() => setIsMenuOpen(false)}
-            className={`font-display text-[2.5rem] sm:text-5xl uppercase transition-all duration-500 delay-${i * 100} ${isMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
-          >
-            {item.label}
-          </a>
-        ))}
-      </div>
-
       {/* 3. HERO SECTION */}
       <section className="pb-8 pt-4 md:pb-12 md:pt-6 overflow-hidden">
         <div className="max-w-[1400px] mx-auto px-4 md:px-8 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-start">
@@ -211,7 +168,20 @@ export default function Home() {
                     <h3 className="font-extrabold uppercase text-lg leading-tight mb-1">{product.name}</h3>
                     <span className="font-bold text-sc_red text-sm">{product.price}</span>
                   </div>
-                  <button className="w-full mt-4 bg-transparent text-black border-2 border-black py-2.5 font-bold text-xs uppercase tracking-widest group-hover:bg-black group-hover:text-cream transition-all">
+                  <button 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      addToCart({
+                        id: product.id,
+                        name: product.name,
+                        price: product.price,
+                        image: product.image,
+                        quantity: 1,
+                        size: 'M' // Default size for quick add
+                      });
+                    }}
+                    className="w-full mt-4 bg-transparent text-black border-2 border-black py-2.5 font-bold text-xs uppercase tracking-widest group-hover:bg-black group-hover:text-cream transition-all shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] group-hover:shadow-none group-hover:translate-x-1 group-hover:translate-y-1"
+                  >
                     Quick Add +
                   </button>
                 </div>
@@ -298,45 +268,6 @@ export default function Home() {
           <p className="text-center font-bold uppercase text-sm tracking-widest text-black/60 mt-4">Tag @wearsc to be featured.</p>
         </div>
       </section>
-
-      {/* 10. FOOTER */}
-      <footer className="bg-black text-cream border-t-8 border-sc_red pt-20 pb-8">
-        <div className="max-w-[1400px] mx-auto px-4 md:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-8 mb-20">
-            <div className="md:col-span-5">
-              <div className="font-display text-4xl border-4 border-cream px-3 py-1 inline-block leading-none mb-6">S/C</div>
-              <p className="text-lg text-sc_gray max-w-sm mb-8">Scrubs engineered for those who never clock out.</p>
-              <div className="flex gap-4">
-                {['IG', 'TW', 'LI'].map((social) => (
-                  <a key={social} href="#" className="w-12 h-12 border border-cream/30 rounded-full flex items-center justify-center hover:bg-cream hover:text-black transition-colors font-bold text-sm">
-                    {social}
-                  </a>
-                ))}
-              </div>
-            </div>
-            <div className="md:col-span-4">
-              <h4 className="text-xl font-bold text-sc_gray mb-6">Quick Links</h4>
-              <div className="flex flex-col gap-4">
-                {["Collection", "Specialty", "Find Your Fit", "Size Guide", "Returns"].map((link) => (
-                  <a key={link} href="#" className="font-bold uppercase tracking-widest hover:text-sc_red transition-colors w-fit">
-                    {link}
-                  </a>
-                ))}
-              </div>
-            </div>
-            <div className="md:col-span-3">
-              <h4 className="text-xl font-bold text-sc_gray mb-6">Contact</h4>
-              <p className="font-bold mb-2">hello@launchlive.studio</p>
-              <p className="font-bold mb-6">+91 73031 12516</p>
-              <p className="text-sm text-sc_gray font-bold">Mon–Sat, 10AM–6PM IST</p>
-            </div>
-          </div>
-          <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-cream/10 text-sm font-bold text-sc_gray gap-4">
-            <p>&copy; 2026 S/C. All rights reserved.</p>
-            <p>Made with ❤️ by Launch Live Studio</p>
-          </div>
-        </div>
-      </footer>
 
       {/* PRODUCT MODAL */}
       <ProductModal product={selectedProduct} onClose={() => setSelectedProduct(null)} />
